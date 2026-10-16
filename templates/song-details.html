@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="/Assets/logo.png">
+    <title>Song Details - Spotify Web Player</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="main">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="nav">
+                <div class="nav-option" style="opacity: 1;" onclick="window.location.href='/'">
+                    <i class="fa-solid fa-house"></i>
+                    <a href="/">Home</a>
+                </div>
+                <div class="nav-option" onclick="window.location.href='/?search=1'">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="/?search=1">Search</a>
+                </div>
+            </div>
+            <div class="library">
+                <div class="options">
+                    <div class="lib-option nav-option">
+                        <img src="/Assets/library_icon.png">
+                        <a href="#">Your Library</a>
+                    </div>
+                    <div class="icons">
+                        <i class="fa-solid fa-plus"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="lib-box">
+                    <div class="box">
+                        <p class="box-p1">Create your first playlist</p>
+                        <p class="box-p2">It's easy, we'll help you</p>
+                        <button class="badge">Create playlist</button>
+                    </div>
+                    <div class="box">
+                        <p class="box-p1">Let's find podcasts to follow</p>
+                        <p class="box-p2">We'll keep you updated on new episodes</p>
+                        <button class="badge">Browse podcasts</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="sticky-nav">
+                <div class="sticky-nav-icons">
+                    <img src="/Assets/backward_icon.png" onclick="window.location.href='/'" style="cursor: pointer;" title="Back to Home">
+                    <img src="/Assets/forward_icon.png" class="hide">
+                </div>
+                <div class="sticky-nav-button">
+                    <button class="badge nav-item" onclick="window.location.href='/'"><i class="fa-solid fa-house"></i> Home</button>
+                    <button class="badge nav-item dark-badge" onclick="window.location.href='/login'"><i class="fa-regular fa-user"></i> Account</button>
+                </div>
+            </div>
+
+            <!-- Song Details View Container -->
+            <div class="song-detail-container" id="details-container">
+                <div class="search-loading-container" id="details-loader">
+                    <i class="fa-solid fa-circle-notch search-spinner"></i>
+                    <div class="search-loading-text">Loading Song Details...</div>
+                    <div class="search-loading-subtext">Fetching master metadata, lyrics and recommendations</div>
+                </div>
+
+                <div id="details-content" style="display: none;">
+                    <!-- Top Navigation Bar -->
+                    <div class="detail-top-nav">
+                        <button class="detail-back-btn" onclick="window.location.href='/'">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Home
+                        </button>
+                        <div class="detail-breadcrumb">
+                            Songs / <span id="breadcrumb-title">Track Details</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero Section -->
+                    <div class="song-detail-hero">
+                        <div class="detail-cover-wrapper">
+                            <img src="/Assets/card1img.jpeg" id="detail-cover" class="detail-cover-img" alt="Cover">
+                        </div>
+                        <div class="song-detail-info">
+                            <div class="detail-badge-row">
+                                <span class="detail-type-badge">Song</span>
+                                <span class="detail-quality-badge"><i class="fa-solid fa-bolt"></i> High Fidelity 320 kbps</span>
+                            </div>
+                            <h1 class="detail-song-title" id="detail-title">Loading Track...</h1>
+                            <div class="detail-artist-row">
+                                <div class="detail-artist-avatar"><i class="fa-solid fa-microphone"></i></div>
+                                <span id="detail-artist">Artist</span>
+                                <i class="fa-solid fa-circle-check verified-icon" title="Verified Artist"></i>
+                            </div>
+                            <div class="detail-meta-row">
+                                <div class="detail-meta-item"><i class="fa-regular fa-clock"></i> <span id="detail-duration">3:30</span></div>
+                                <div class="detail-meta-item"><i class="fa-solid fa-play"></i> <span id="detail-views">1,200,000 plays</span></div>
+                                <div class="detail-meta-item"><i class="fa-regular fa-thumbs-up"></i> <span id="detail-likes">85K likes</span></div>
+                                <div class="detail-meta-item"><i class="fa-regular fa-calendar"></i> <span id="detail-year">2025</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar (Play, Like, Add to Playlist, Share, Download, More Options) -->
+                    <div class="detail-actions-bar">
+                        <button class="detail-play-btn" id="detail-main-play-btn" title="Play Track">
+                            <i class="fa-solid fa-play" id="detail-main-play-icon"></i>
+                        </button>
+
+                        <button class="detail-action-icon-btn" id="detail-like-btn" title="Save to Liked Songs">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                        <button class="detail-action-icon-btn" id="detail-playlist-btn" title="Add to Playlist">
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </button>
+
+                        <button class="detail-action-icon-btn" id="detail-share-btn" title="Copy Song Link">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        </button>
+
+                        <button class="detail-action-icon-btn" id="detail-download-btn" title="Download Audio Stream">
+                            <i class="fa-solid fa-circle-down"></i>
+                        </button>
+
+                        <div class="detail-dropdown-wrapper">
+                            <button class="detail-action-icon-btn" id="detail-more-btn" title="More Options">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                            <div class="detail-menu-dropdown" id="detail-menu-dropdown">
+                                <button class="dropdown-item" id="menu-queue-btn"><i class="fa-solid fa-list-ul"></i> Add to queue</button>
+                                <button class="dropdown-item" id="menu-copy-btn"><i class="fa-regular fa-copy"></i> Copy song link</button>
+                                <button class="dropdown-item" id="menu-yt-btn"><i class="fa-brands fa-youtube"></i> Open on YouTube</button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item" id="menu-credits-btn"><i class="fa-solid fa-circle-info"></i> View audio specs</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Grid: Left (Lyrics & Credits), Right (Recommended) -->
+                    <div class="detail-content-grid">
+                        <div class="detail-left-col">
+                            <!-- Lyrics & Waveform Box -->
+                            <div class="detail-card-box">
+                                <div class="detail-box-title">
+                                    <span><i class="fa-solid fa-lines-leaning" style="color: #1ed760;"></i> Live Audio Waves & Lyrics</span>
+                                    <div class="equalizer-wave-container" id="eq-waves">
+                                        <div class="eq-bar"></div>
+                                        <div class="eq-bar"></div>
+                                        <div class="eq-bar"></div>
+                                        <div class="eq-bar"></div>
+                                        <div class="eq-bar"></div>
+                                        <div class="eq-bar"></div>
+                                    </div>
+                                </div>
+                                <div class="lyrics-preview-content" id="lyrics-box">
+                                    "Playing in ultra-clear stereo audio.
+                                    Enjoy seamless streaming directly from Spotify Web Player."
+                                </div>
+                            </div>
+
+                            <!-- Song Information & Credits Box -->
+                            <div class="detail-card-box">
+                                <div class="detail-box-title">
+                                    <span><i class="fa-solid fa-circle-info" style="color: #1ed760;"></i> Song Information & Credits</span>
+                                </div>
+                                <div class="credits-table">
+                                    <div class="credit-row">
+                                        <span class="credit-label">Song Title</span>
+                                        <span class="credit-value" id="credit-title">-</span>
+                                    </div>
+                                    <div class="credit-row">
+                                        <span class="credit-label">Artist / Performer</span>
+                                        <span class="credit-value" id="credit-artist">-</span>
+                                    </div>
+                                    <div class="credit-row">
+                                        <span class="credit-label">Audio Quality</span>
+                                        <span class="credit-value" style="color: #1ed760;">Master Audio (320 kbps Opus/AAC)</span>
+                                    </div>
+                                    <div class="credit-row">
+                                        <span class="credit-label">Streaming Platform</span>
+                                        <span class="credit-value">Spotify Web Player Clone (Google Video Stream)</span>
+                                    </div>
+                                    <div class="credit-row">
+                                        <span class="credit-label">Release Info</span>
+                                        <span class="credit-value" id="credit-release">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Up Next & Recommended Songs -->
+                        <div class="detail-right-col">
+                            <div class="detail-card-box">
+                                <div class="detail-box-title">
+                                    <span><i class="fa-solid fa-sparkles" style="color: #1ed760;"></i> Recommended Tracks</span>
+                                </div>
+                                <div class="recommended-list" id="recommended-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <!-- Persistent Music Player Bar -->
+        <div class="music-player">
+            <div class="album">
+                <img src="/Assets/card1img.jpeg" class="curr-img" id="current-cover" alt="Current Track">
+                <div class="curr-desc">
+                    <p class="curr-title" id="current-title">Select a track to play</p>
+                    <p class="curr-artist" id="current-artist">Spotify Clone</p>
+                </div>
+                <i class="fa-regular fa-heart control-like-icon" id="like-btn" title="Save to Your Library"></i>
+            </div>
+            <div class="player">
+                <div class="player-controls">
+                    <i class="fa-solid fa-shuffle player-control-icon" id="shuffle-btn" title="Enable Shuffle"></i>
+                    <i class="fa-solid fa-backward-step player-control-icon" id="prev-btn" title="Previous"></i>
+                    <button class="main-play-btn" id="play-pause-btn" title="Play">
+                        <i class="fa-solid fa-play" id="play-icon"></i>
+                    </button>
+                    <i class="fa-solid fa-forward-step player-control-icon" id="next-btn" title="Next"></i>
+                    <i class="fa-solid fa-repeat player-control-icon" id="repeat-btn" title="Enable Repeat"></i>
+                </div>
+                <div class="playback-bar">
+                    <span class="curr-time" id="curr-time">00:00</span>
+                    <input type="range" min="0" max="100" class="progress-bar" id="slider" value="0">
+                    <span class="total-time" id="total-time">00:00</span>
+                </div>
+            </div>
+            <div class="controls">
+                <i class="fa-solid fa-volume-high control-side-icon" id="volume-icon" title="Mute"></i>
+                <input type="range" min="0" max="100" class="volume-slider" id="volume-slider" value="80">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast-notification">Notification</div>
+
+    <!-- Page Script -->
+    <script>
+        const BACKEND_URL = "http://localhost:5000/api";
+        let currentSongId = "";
+        let currentSongData = null;
+        let currentAudio = null;
+        let isPlaying = false;
+        let recommendedPlaylist = [];
+
+        // Parse Song ID from URL (/song/:id or ?id=...)
+        function getSongIdFromUrl() {
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            if (pathParts.length >= 2 && pathParts[0] === 'song') {
+                return pathParts[1];
+            }
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || 'BddP6PYo2gs'; // Fallback to Kesariya
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast-notification");
+            if (!toast) return;
+            toast.innerText = msg;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2800);
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "00:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function updatePlayIcons(playing) {
+            isPlaying = playing;
+            const playIcon = document.getElementById("play-icon");
+            const playBtn = document.getElementById("play-pause-btn");
+            const detailPlayIcon = document.getElementById("detail-main-play-icon");
+            const eqBars = document.querySelectorAll(".eq-bar");
+
+            if (playing) {
+                if (playIcon) { playIcon.classList.remove("fa-play"); playIcon.classList.add("fa-pause"); }
+                if (detailPlayIcon) { detailPlayIcon.classList.remove("fa-play"); detailPlayIcon.classList.add("fa-pause"); }
+                if (playBtn) playBtn.classList.add("playing");
+                eqBars.forEach(b => b.classList.add("animating"));
+            } else {
+                if (playIcon) { playIcon.classList.remove("fa-pause"); playIcon.classList.add("fa-play"); }
+                if (detailPlayIcon) { detailPlayIcon.classList.remove("fa-pause"); detailPlayIcon.classList.add("fa-play"); }
+                if (playBtn) playBtn.classList.remove("playing");
+                eqBars.forEach(b => b.classList.remove("animating"));
+            }
+        }
+
+        function playSong(id, title, artist, coverUrl) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.src = "";
+            }
+
+            document.getElementById("current-title").innerText = title;
+            document.getElementById("current-artist").innerText = artist;
+            if (coverUrl) document.getElementById("current-cover").src = coverUrl;
+
+            currentAudio = new Audio(`${BACKEND_URL}/stream/${id}`);
+            const volSlider = document.getElementById("volume-slider");
+            if (volSlider) currentAudio.volume = parseFloat(volSlider.value) / 100;
+
+            currentAudio.addEventListener("play", () => updatePlayIcons(true));
+            currentAudio.addEventListener("pause", () => updatePlayIcons(false));
+
+            currentAudio.addEventListener("loadedmetadata", () => {
+                document.getElementById("total-time").innerText = formatTime(currentAudio.duration);
+            });
+
+            currentAudio.addEventListener("timeupdate", () => {
+                if (currentAudio.duration) {
+                    const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                    const slider = document.getElementById("slider");
+                    if (slider) {
+                        slider.value = percent;
+                        slider.style.setProperty("--progress-percent", `${percent}%`);
+                    }
+                    document.getElementById("curr-time").innerText = formatTime(currentAudio.currentTime);
+                    document.getElementById("total-time").innerText = formatTime(currentAudio.duration);
+                }
+            });
+
+            currentAudio.play().then(() => updatePlayIcons(true)).catch(console.error);
+        }
+
+        function togglePlayPause() {
+            if (currentAudio) {
+                if (currentAudio.paused) {
+                    currentAudio.play().then(() => updatePlayIcons(true));
+                } else {
+                    currentAudio.pause();
+                    updatePlayIcons(false);
+                }
+            } else if (currentSongData) {
+                playSong(currentSongData.id, currentSongData.title, currentSongData.artist, currentSongData.coverUrl);
+            }
+        }
+
+        async function loadSongDetails(id) {
+            currentSongId = id;
+            try {
+                const res = await fetch(`${BACKEND_URL}/song/${id}`);
+                const data = await res.json();
+                currentSongData = data;
+
+                document.getElementById("details-loader").style.display = "none";
+                document.getElementById("details-content").style.display = "block";
+
+                // Populate UI
+                document.title = `${data.title} • Spotify Song Details`;
+                document.getElementById("breadcrumb-title").innerText = data.title;
+                document.getElementById("detail-cover").src = data.coverUrl;
+                document.getElementById("detail-title").innerText = data.title;
+                document.getElementById("detail-artist").innerText = data.artist;
+                document.getElementById("detail-duration").innerText = data.duration;
+                document.getElementById("detail-views").innerText = `${data.views || '1,000,000+'} plays`;
+                document.getElementById("detail-likes").innerText = `${data.likes || '50,000+'} likes`;
+                document.getElementById("detail-year").innerText = data.uploadDate || '2025';
+
+                document.getElementById("credit-title").innerText = data.title;
+                document.getElementById("credit-artist").innerText = data.artist;
+                document.getElementById("credit-release").innerText = `${data.uploadDate || '2025'} • YouTube Music`;
+
+                // Update playbar preview
+                document.getElementById("current-cover").src = data.coverUrl;
+                document.getElementById("current-title").innerText = data.title;
+                document.getElementById("current-artist").innerText = data.artist;
+                document.getElementById("total-time").innerText = data.duration;
+
+                // Render Recommendations
+                const recList = document.getElementById("recommended-list");
+                recList.innerHTML = "";
+                if (data.recommendations && data.recommendations.length > 0) {
+                    recommendedPlaylist = data.recommendations;
+                    data.recommendations.forEach((rec, idx) => {
+                        const row = document.createElement("div");
+                        row.className = "track-row";
+                        row.innerHTML = `
+                            <span class="track-row-num">${idx + 1}</span>
+                            <i class="fa-solid fa-play track-row-play-icon"></i>
+                            <img src="${rec.coverUrl}" class="track-row-thumb" alt="${rec.title}">
+                            <div class="track-row-info">
+                                <div class="track-row-title">${rec.title}</div>
+                                <div class="track-row-artist">${rec.artist}</div>
+                            </div>
+                            <div class="track-row-duration">${rec.duration || '3:30'}</div>
+                            <i class="fa-regular fa-heart track-row-like" title="Save to Library"></i>
+                        `;
+                        row.addEventListener("click", () => {
+                            window.location.href = `/song/${rec.id}`;
+                        });
+                        recList.appendChild(row);
+                    });
+                } else {
+                    recList.innerHTML = `<div style="color: #8c8c8c; font-size: 0.88rem; padding: 12px 0;">No similar songs found.</div>`;
+                }
+            } catch (err) {
+                console.error("Error loading song details:", err);
+                document.getElementById("details-loader").innerHTML = `
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: #ff5555; margin-bottom: 8px;"></i>
+                    <div class="search-loading-text">Failed to load song details</div>
+                    <button class="badge" onclick="window.location.href='/'">Back to Home</button>
+                `;
+            }
+        }
+
+        // Action Buttons Setup
+        document.getElementById("detail-main-play-btn").addEventListener("click", togglePlayPause);
+        document.getElementById("play-pause-btn").addEventListener("click", togglePlayPause);
+
+        // Like Button
+        document.getElementById("detail-like-btn").addEventListener("click", (e) => {
+            const icon = e.currentTarget.querySelector("i");
+            icon.classList.toggle("fa-regular");
+            icon.classList.toggle("fa-solid");
+            e.currentTarget.classList.toggle("active");
+            showToast(e.currentTarget.classList.contains("active") ? "Added to your Liked Songs" : "Removed from Liked Songs");
+        });
+
+        // Add to Playlist Button
+        document.getElementById("detail-playlist-btn").addEventListener("click", () => {
+            showToast("Added to Playlist: 'My Favorites'");
+        });
+
+        // Share Button
+        document.getElementById("detail-share-btn").addEventListener("click", () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast("Song link copied to clipboard!");
+            }).catch(() => {
+                showToast("Link: " + window.location.href);
+            });
+        });
+
+        // Download / Stream Button
+        document.getElementById("detail-download-btn").addEventListener("click", () => {
+            if (currentSongId) {
+                window.open(`${BACKEND_URL}/stream/${currentSongId}`, '_blank');
+                showToast("Opening direct high-quality audio stream");
+            }
+        });
+
+        // More Menu Dropdown
+        const moreBtn = document.getElementById("detail-more-btn");
+        const dropdown = document.getElementById("detail-menu-dropdown");
+        moreBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+        });
+
+        document.addEventListener("click", () => {
+            dropdown.classList.remove("open");
+        });
+
+        document.getElementById("menu-queue-btn").addEventListener("click", () => {
+            showToast("Added to your playback queue");
+        });
+
+        document.getElementById("menu-copy-btn").addEventListener("click", () => {
+            navigator.clipboard.writeText(window.location.href);
+            showToast("Song link copied to clipboard!");
+        });
+
+        document.getElementById("menu-yt-btn").addEventListener("click", () => {
+            if (currentSongId) {
+                window.open(`https://www.youtube.com/watch?v=${currentSongId}`, '_blank');
+            }
+        });
+
+        document.getElementById("menu-credits-btn").addEventListener("click", () => {
+            document.querySelector(".credits-table").scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Scrub Slider
+        const slider = document.getElementById("slider");
+        slider.addEventListener("input", (e) => {
+            slider.style.setProperty("--progress-percent", `${e.target.value}%`);
+        });
+        slider.addEventListener("change", (e) => {
+            if (currentAudio && currentAudio.duration) {
+                currentAudio.currentTime = (e.target.value / 100) * currentAudio.duration;
+            }
+        });
+
+        // Volume Slider
+        const volumeSlider = document.getElementById("volume-slider");
+        volumeSlider.addEventListener("input", (e) => {
+            volumeSlider.style.setProperty("--volume-percent", `${e.target.value}%`);
+            if (currentAudio) currentAudio.volume = parseFloat(e.target.value) / 100;
+        });
+
+        // Initialize on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            const songId = getSongIdFromUrl();
+            loadSongDetails(songId);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="./Assets/logo.png">
+    <title>Spotify - Web Player: Music for everyone</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="main">
+        <div class="sidebar">
+            <div class="nav">
+                <div class="spotify-brand" id="brand-home-link" style="cursor: pointer;" title="Spotify">
+                    <i class="fa-brands fa-spotify"></i>
+                    <span>Spotify</span>
+                </div>
+                <div class="nav-option" id="nav-home-btn" style="opacity: 1;">
+                    <i class="fa-solid fa-house"></i>
+                    <a href="#">Home</a>
+                </div>
+                <div class="nav-option" id="nav-search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="#">Search</a>
+                </div>
+            </div>
+            <div class="library">
+                <div class="options">
+                    <div class="lib-option nav-option" id="lib-heading-btn">
+                        <i class="fa-solid fa-lines-leaning library-icon-fa"></i>
+                        <a href="#">Your Library</a>
+                    </div>
+                    <div class="icons">
+                        <i class="fa-solid fa-plus" id="lib-create-playlist-btn" title="Create playlist or folder"></i>
+                        <i class="fa-solid fa-arrow-right" id="lib-expand-btn" title="Show more"></i>
+                    </div>
+                </div>
+
+                <!-- Library Category Filter Chips -->
+                <div class="library-filter-chips">
+                    <button class="lib-filter-pill active" data-filter="all">Playlists</button>
+                    <button class="lib-filter-pill" data-filter="artists">Artists</button>
+                    <button class="lib-filter-pill" data-filter="albums">Albums</button>
+                </div>
+
+                <!-- Library Playlists & Pinned Items -->
+                <div class="library-items-list" id="library-items-list">
+                    <!-- Liked Songs Pinned -->
+                    <div class="library-item active" id="sidebar-liked-songs" data-query="Liked Songs">
+                        <div class="lib-item-icon liked-gradient">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Liked Songs</div>
+                            <div class="lib-item-subtitle"><i class="fa-solid fa-thumbtack pin-icon"></i> Playlist • 48 songs</div>
+                        </div>
+                    </div>
+
+                    <!-- Top Bollywood 2026 -->
+                    <div class="library-item" data-query="Top Bollywood Songs 2026">
+                        <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="lib-item-thumb" alt="Bollywood">
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Top Bollywood 2026</div>
+                            <div class="lib-item-subtitle">Playlist • Spotify</div>
+                        </div>
+                    </div>
+
+                    <!-- Global Top 50 -->
+                    <div class="library-item" data-query="Global Top 50 Songs">
+                        <img src="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" class="lib-item-thumb" alt="Global Top 50">
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Global Top 50</div>
+                            <div class="lib-item-subtitle">Playlist • Spotify</div>
+                        </div>
+                    </div>
+
+                    <!-- Arijit Singh Hits -->
+                    <div class="library-item" data-query="Arijit Singh Best Songs">
+                        <img src="https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg" class="lib-item-thumb" alt="Arijit Singh">
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Arijit Singh Essentials</div>
+                            <div class="lib-item-subtitle">Artist • 42M Monthly</div>
+                        </div>
+                    </div>
+
+                    <!-- Punjabi Wave -->
+                    <div class="library-item" data-query="Top Punjabi Songs 2026">
+                        <img src="https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg" class="lib-item-thumb" alt="Punjabi">
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Punjabi Wave</div>
+                            <div class="lib-item-subtitle">Playlist • Spotify</div>
+                        </div>
+                    </div>
+
+                    <!-- Lo-Fi Chill & Relax -->
+                    <div class="library-item" data-query="Bollywood Lo-Fi Chill Hits">
+                        <img src="https://i.ytimg.com/vi/RIPaQQ7u_os/hqdefault.jpg" class="lib-item-thumb" alt="Lo-Fi">
+                        <div class="lib-item-info">
+                            <div class="lib-item-title">Lo-Fi Chill & Relax</div>
+                            <div class="lib-item-subtitle">Playlist • Spotify</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="sticky-nav">
+                <div class="sticky-nav-left">
+                    <div class="sticky-nav-icons">
+                        <button class="nav-circle-btn" id="nav-history-back" title="Go back"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="nav-circle-btn disabled" id="nav-history-forward" title="Go forward"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="search-container" id="search-container">
+                        <div class="nav-search-bar" id="nav-search-bar">
+                            <i class="fa-solid fa-magnifying-glass search-leading-icon"></i>
+                            <input type="text" id="search-input" placeholder="What do you want to play?" autocomplete="off" spellcheck="false">
+                            <button type="button" class="search-clear-btn" id="search-clear-btn" title="Clear search" style="display: none;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <div class="search-divider"></div>
+                            <button type="button" class="search-browse-btn" id="search-browse-btn" title="Browse all categories">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </button>
+                        </div>
+
+                        <!-- Autocomplete Suggestions Dropdown -->
+                        <div class="search-suggestions-dropdown" id="search-suggestions-dropdown"></div>
+                    </div>
+                </div>
+                <div class="sticky-nav-button">
+                    <button class="badge nav-item premium-badge" id="nav-premium-btn">Explore Premium</button>
+                    <button class="nav-circle-btn nav-bell-btn" id="nav-bell-btn" title="What's New"><i class="fa-regular fa-bell"></i></button>
+                    
+                    <!-- Profile Container -->
+                    <div class="profile-container" id="profile-container">
+                        <button class="profile-btn" id="profile-btn" title="Profile menu">
+                            <div class="profile-avatar-circle" id="profile-avatar-circle">
+                                <i class="fa-regular fa-user" id="profile-default-icon"></i>
+                                <span class="profile-initials" id="profile-initials" style="display: none;">U</span>
+                            </div>
+                            <span class="profile-display-name" id="profile-display-name">Log In</span>
+                            <i class="fa-solid fa-caret-down profile-caret"></i>
+                        </button>
+
+                        <!-- Profile Dropdown -->
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <!-- Populated dynamically via script.js -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home View Section -->
+            <div id="home-view" class="view-section">
+                <!-- Spotify Filter Chips -->
+                <div class="home-filter-row">
+                    <button class="home-filter-pill active" data-filter="all">All</button>
+                    <button class="home-filter-pill" data-filter="music">Music</button>
+                    <button class="home-filter-pill" data-filter="podcasts">Podcasts</button>
+                </div>
+
+                <!-- Spotify Signature 6-Card Quick-Picks Grid -->
+                <div class="quick-picks-section">
+                    <div class="quick-picks-grid">
+                        <div class="quick-card" id="quick-liked-songs" data-id="BddP6PYo2gs" data-title="Kesariya" data-artist="Arijit Singh, Pritam" data-cover="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg">
+                            <div class="quick-card-thumb liked-thumb">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <span class="quick-card-title">Liked Songs</span>
+                            <button class="quick-play-btn" title="Play Liked Songs"><i class="fa-solid fa-play"></i></button>
+                        </div>
+
+                        <div class="quick-card" data-id="VAdGW7QDJiU" data-title="Chaleya" data-artist="Arijit Singh, Shilpa Rao" data-cover="https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg">
+                            <img src="https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg" class="quick-card-thumb" alt="Chaleya">
+                            <span class="quick-card-title">Top Bollywood 2026</span>
+                            <button class="quick-play-btn" title="Play Top Bollywood"><i class="fa-solid fa-play"></i></button>
+                        </div>
+
+                        <div class="quick-card" data-id="UEvOsQBu1jY" data-title="Apna Bana Le" data-artist="Arijit Singh" data-cover="https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg">
+                            <img src="https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg" class="quick-card-thumb" alt="Apna Bana Le">
+                            <span class="quick-card-title">Arijit Singh Essentials</span>
+                            <button class="quick-play-btn" title="Play Apna Bana Le"><i class="fa-solid fa-play"></i></button>
+                        </div>
+
+                        <div class="quick-card" data-id="mH_LFkWxpI0" data-title="Lover" data-artist="Diljit Dosanjh" data-cover="https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg">
+                            <img src="https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg" class="quick-card-thumb" alt="Lover">
+                            <span class="quick-card-title">Diljit: MoonChild Era</span>
+                            <button class="quick-play-btn" title="Play Lover"><i class="fa-solid fa-play"></i></button>
+                        </div>
+
+                        <div class="quick-card" data-id="JGwWNGJdvx8" data-title="Shape of You" data-artist="Ed Sheeran" data-cover="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg">
+                            <img src="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" class="quick-card-thumb" alt="Shape of You">
+                            <span class="quick-card-title">Global Top 50</span>
+                            <button class="quick-play-btn" title="Play Shape of You"><i class="fa-solid fa-play"></i></button>
+                        </div>
+
+                        <div class="quick-card" data-id="RIPaQQ7u_os" data-title="Tu Hai Kahan" data-artist="AUR" data-cover="https://i.ytimg.com/vi/RIPaQQ7u_os/hqdefault.jpg">
+                            <img src="https://i.ytimg.com/vi/RIPaQQ7u_os/hqdefault.jpg" class="quick-card-thumb" alt="Tu Hai Kahan">
+                            <span class="quick-card-title">Lo-Fi Chill & Relax</span>
+                            <button class="quick-play-btn" title="Play Tu Hai Kahan"><i class="fa-solid fa-play"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 1: Real Trending Hits -->
+                <div class="section-header-row">
+                    <h2 class="section-heading">Trending Hits</h2>
+                    <a href="#" class="section-show-all-link">Show all</a>
+                </div>
+                <div class="cards-containr">
+                    <div class="card real-song-card" data-id="BddP6PYo2gs" data-title="Kesariya" data-artist="Arijit Singh, Pritam" data-cover="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" data-duration="4:28" title="Kesariya • Arijit Singh, Pritam">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="card-img" alt="Kesariya">
+                            <button class="song-card-play-btn" title="Play Kesariya" data-play-id="BddP6PYo2gs">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="BddP6PYo2gs">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Kesariya</p>
+                            <p class="card-info">Arijit Singh, Pritam • Brahmāstra</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="mH_LFkWxpI0" data-title="Lover" data-artist="Diljit Dosanjh" data-cover="https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg" data-duration="3:22" title="Lover • Diljit Dosanjh">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg" class="card-img" alt="Lover">
+                            <button class="song-card-play-btn" title="Play Lover" data-play-id="mH_LFkWxpI0">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="mH_LFkWxpI0">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Lover</p>
+                            <p class="card-info">Diljit Dosanjh • MoonChild Era</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="VAdGW7QDJiU" data-title="Chaleya" data-artist="Arijit Singh, Shilpa Rao" data-cover="https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg" data-duration="3:08" title="Chaleya • Arijit Singh, Shilpa Rao">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg" class="card-img" alt="Chaleya">
+                            <button class="song-card-play-btn" title="Play Chaleya" data-play-id="VAdGW7QDJiU">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="VAdGW7QDJiU">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Chaleya</p>
+                            <p class="card-info">Arijit Singh, Shilpa Rao • Jawan</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="cWMxCE2HTag" data-title="Softly" data-artist="Karan Aujla, Ikky" data-cover="https://i.ytimg.com/vi/cWMxCE2HTag/hqdefault.jpg" data-duration="2:35" title="Softly • Karan Aujla">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/cWMxCE2HTag/hqdefault.jpg" class="card-img" alt="Softly">
+                            <button class="song-card-play-btn" title="Play Softly" data-play-id="cWMxCE2HTag">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="cWMxCE2HTag">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Softly</p>
+                            <p class="card-info">Karan Aujla, Ikky • Making Memories</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="9xVp8m0fJSg" data-title="Mahiye Jinna Sohna" data-artist="Darshan Raval" data-cover="https://i.ytimg.com/vi/9xVp8m0fJSg/hqdefault.jpg" data-duration="3:02" title="Mahiye Jinna Sohna • Darshan Raval">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/9xVp8m0fJSg/hqdefault.jpg" class="card-img" alt="Mahiye Jinna Sohna">
+                            <button class="song-card-play-btn" title="Play Mahiye Jinna Sohna" data-play-id="9xVp8m0fJSg">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="9xVp8m0fJSg">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Mahiye Jinna Sohna</p>
+                            <p class="card-info">Darshan Raval • Latest Trending Hit</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="AETFvQonfV8" data-title="Shree Hanuman Chalisa" data-artist="Hariharan, Gulshan Kumar" data-cover="https://i.ytimg.com/vi/AETFvQonfV8/hqdefault.jpg" data-duration="9:48" title="Shree Hanuman Chalisa">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/AETFvQonfV8/hqdefault.jpg" class="card-img" alt="Shree Hanuman Chalisa">
+                            <button class="song-card-play-btn" title="Play Hanuman Chalisa" data-play-id="AETFvQonfV8">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="AETFvQonfV8">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Shree Hanuman Chalisa</p>
+                            <p class="card-info">Hariharan • T-Series Bhakti</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Real Top Charts & Hits -->
+                <div class="section-header-row" style="margin-top: 1.5rem;">
+                    <h2 class="section-heading">Top Charts & Global Hits</h2>
+                    <a href="#" class="section-show-all-link">Show all</a>
+                </div>
+                <div class="cards-containr">
+                    <div class="card real-song-card" data-id="34Na4j8AVgA" data-title="Starboy" data-artist="The Weeknd ft. Daft Punk" data-cover="https://i.ytimg.com/vi/34Na4j8AVgA/hqdefault.jpg" data-duration="3:50" title="Starboy • The Weeknd">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/34Na4j8AVgA/hqdefault.jpg" class="card-img" alt="Starboy">
+                            <button class="song-card-play-btn" title="Play Starboy" data-play-id="34Na4j8AVgA">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="34Na4j8AVgA">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Starboy</p>
+                            <p class="card-info">The Weeknd ft. Daft Punk</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="JGwWNGJdvx8" data-title="Shape of You" data-artist="Ed Sheeran" data-cover="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" data-duration="3:53" title="Shape of You • Ed Sheeran">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" class="card-img" alt="Shape of You">
+                            <button class="song-card-play-btn" title="Play Shape of You" data-play-id="JGwWNGJdvx8">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="JGwWNGJdvx8">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Shape of You</p>
+                            <p class="card-info">Ed Sheeran • ÷ (Divide)</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="n_FCrCQ6-b4" data-title="295" data-artist="Sidhu Moose Wala" data-cover="https://i.ytimg.com/vi/n_FCrCQ6-b4/hqdefault.jpg" data-duration="4:30" title="295 • Sidhu Moose Wala">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/n_FCrCQ6-b4/hqdefault.jpg" class="card-img" alt="295">
+                            <button class="song-card-play-btn" title="Play 295" data-play-id="n_FCrCQ6-b4">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="n_FCrCQ6-b4">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">295</p>
+                            <p class="card-info">Sidhu Moose Wala • Moosetape</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="UEvOsQBu1jY" data-title="Apna Bana Le" data-artist="Arijit Singh, Sachin-Jigar" data-cover="https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg" data-duration="4:21" title="Apna Bana Le • Arijit Singh">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg" class="card-img" alt="Apna Bana Le">
+                            <button class="song-card-play-btn" title="Play Apna Bana Le" data-play-id="UEvOsQBu1jY">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="UEvOsQBu1jY">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Apna Bana Le</p>
+                            <p class="card-info">Arijit Singh, Sachin-Jigar • Bhediya</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="4NRXx6U8ABQ" data-title="Blinding Lights" data-artist="The Weeknd" data-cover="https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg" data-duration="3:20" title="Blinding Lights • The Weeknd">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg" class="card-img" alt="Blinding Lights">
+                            <button class="song-card-play-btn" title="Play Blinding Lights" data-play-id="4NRXx6U8ABQ">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="4NRXx6U8ABQ">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Blinding Lights</p>
+                            <p class="card-info">The Weeknd • After Hours</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="RLzC55ai0eo" data-title="Heeriye" data-artist="Jasleen Royal, Arijit Singh" data-cover="https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg" data-duration="3:15" title="Heeriye • Jasleen Royal, Arijit Singh">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg" class="card-img" alt="Heeriye">
+                            <button class="song-card-play-btn" title="Play Heeriye" data-play-id="RLzC55ai0eo">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="RLzC55ai0eo">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Heeriye</p>
+                            <p class="card-info">Jasleen Royal, Arijit Singh</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Real Blockbusters -->
+                <div class="section-header-row" style="margin-top: 1.5rem;">
+                    <h2 class="section-heading">Today's Biggest Blockbusters</h2>
+                    <a href="#" class="section-show-all-link">Show all</a>
+                </div>
+                <div class="cards-containr">
+                    <div class="card real-song-card" data-id="tOM-nWPcR4U" data-title="Illuminati" data-artist="Sushin Shyam, Dabzee" data-cover="https://i.ytimg.com/vi/tOM-nWPcR4U/hqdefault.jpg" data-duration="3:12" title="Illuminati • Aavesham">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/tOM-nWPcR4U/hqdefault.jpg" class="card-img" alt="Illuminati">
+                            <button class="song-card-play-btn" title="Play Illuminati" data-play-id="tOM-nWPcR4U">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="tOM-nWPcR4U">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Illuminati</p>
+                            <p class="card-info">Sushin Shyam, Dabzee • Aavesham</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="LK7-_dgAVQE" data-title="Tauba Tauba" data-artist="Karan Aujla, Vicky Kaushal" data-cover="https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg" data-duration="3:27" title="Tauba Tauba • Bad Newz">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg" class="card-img" alt="Tauba Tauba">
+                            <button class="song-card-play-btn" title="Play Tauba Tauba" data-play-id="LK7-_dgAVQE">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="LK7-_dgAVQE">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Tauba Tauba</p>
+                            <p class="card-info">Karan Aujla • Bad Newz</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="hrQD_tCj_7s" data-title="Satranga" data-artist="Arijit Singh, Shreyas Puranik" data-cover="https://i.ytimg.com/vi/hrQD_tCj_7s/hqdefault.jpg" data-duration="4:31" title="Satranga • Animal">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/hrQD_tCj_7s/hqdefault.jpg" class="card-img" alt="Satranga">
+                            <button class="song-card-play-btn" title="Play Satranga" data-play-id="hrQD_tCj_7s">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="hrQD_tCj_7s">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Satranga</p>
+                            <p class="card-info">Arijit Singh • Animal</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="7wtfhZwyrcc" data-title="Believer" data-artist="Imagine Dragons" data-cover="https://i.ytimg.com/vi/7wtfhZwyrcc/hqdefault.jpg" data-duration="3:24" title="Believer • Imagine Dragons">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/7wtfhZwyrcc/hqdefault.jpg" class="card-img" alt="Believer">
+                            <button class="song-card-play-btn" title="Play Believer" data-play-id="7wtfhZwyrcc">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="7wtfhZwyrcc">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Believer</p>
+                            <p class="card-info">Imagine Dragons • Evolve</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="1fT2A8q3VHQ" data-title="Pehle Bhi Main" data-artist="Vishal Mishra" data-cover="https://i.ytimg.com/vi/1fT2A8q3VHQ/hqdefault.jpg" data-duration="4:10" title="Pehle Bhi Main • Animal">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/1fT2A8q3VHQ/hqdefault.jpg" class="card-img" alt="Pehle Bhi Main">
+                            <button class="song-card-play-btn" title="Play Pehle Bhi Main" data-play-id="1fT2A8q3VHQ">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="1fT2A8q3VHQ">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Pehle Bhi Main</p>
+                            <p class="card-info">Vishal Mishra • Animal</p>
+                        </div>
+                    </div>
+
+                    <div class="card real-song-card" data-id="P_42B_J5i8o" data-title="Guli Mata" data-artist="Saad Lamjarred, Shreya Ghoshal" data-cover="https://i.ytimg.com/vi/P_42B_J5i8o/hqdefault.jpg" data-duration="3:38" title="Guli Mata • Saad Lamjarred, Shreya Ghoshal">
+                        <div class="card-img-wrapper">
+                            <img src="https://i.ytimg.com/vi/P_42B_J5i8o/hqdefault.jpg" class="card-img" alt="Guli Mata">
+                            <button class="song-card-play-btn" title="Play Guli Mata" data-play-id="P_42B_J5i8o">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="card-more-btn" title="Song details" data-id="P_42B_J5i8o">
+                                <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                        </div>
+                        <div class="card-content-meta">
+                            <p class="card-tital">Guli Mata</p>
+                            <p class="card-info">Saad Lamjarred, Shreya Ghoshal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dedicated Search Results & Browse View -->
+            <div id="search-view" class="view-section" style="display: none;">
+                <!-- Populated dynamically with all available songs -->
+            </div>
+
+            <!-- Dedicated Song Details View -->
+            <div id="song-detail-view" class="view-section" style="display: none;">
+                <!-- Populated dynamically with full song details, all options, lyrics & recommendations -->
+            </div>
+            <div class="footer">
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="music-player">
+            <div class="album">
+                <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="curr-img album-in" id="current-cover" alt="Album Cover">
+                <div class="curr-sing-info album-in">
+                    <span class="curr-song-name" id="current-title">Kesariya</span>
+                    <span class="curr-artist-name" id="current-artist">Arijit Singh, Pritam</span>
+                </div>
+                <i class="fa-regular fa-heart song-like album-in" id="like-btn" title="Save to Your Library"></i>
+                <i class="fa-solid fa-clone song-pip" id="pip-btn" title="Picture in picture"></i>
+            </div>
+            <div class="player">
+                <div class="player-controls">
+                    <button class="player-control-btn" id="shuffle-btn" title="Enable shuffle"><i class="fa-solid fa-shuffle"></i></button>
+                    <button class="player-control-btn" id="prev-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+                    <button class="main-play-btn" id="play-pause-btn" title="Play">
+                        <i class="fa-solid fa-play" id="play-icon"></i>
+                    </button>
+                    <button class="player-control-btn" id="next-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+                    <button class="player-control-btn" id="repeat-btn" title="Enable repeat"><i class="fa-solid fa-repeat"></i></button>
+                </div>
+                <div class="playback-bar">
+                    <span class="curr-time" id="curr-time">00:00</span>
+                    <input type="range" min="0" max="100" value="0" id="slider" class="prograss-bar" step="0.1">
+                    <span class="total-time" id="total-time">04:28</span>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="controls-side">
+                    <button class="control-side-btn" id="lyrics-btn" title="Lyrics"><i class="fa-solid fa-microphone"></i></button>
+                    <button class="control-side-btn" id="queue-btn" title="Queue"><i class="fa-solid fa-bars-staggered"></i></button>
+                    <button class="control-side-btn" id="device-btn" title="Connect to a device"><i class="fa-solid fa-computer"></i></button>
+                    <button class="control-side-btn" id="volume-icon-btn" title="Mute">
+                        <i class="fa-solid fa-volume-high" id="volume-icon"></i>
+                    </button>
+                    <input type="range" min="0" max="100" value="80" id="volume-slider" class="volume-bar" step="1">
+                    <button class="control-side-btn" id="fullscreen-btn" title="Full screen"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal-overlay" id="profile-modal-overlay">
+        <div class="profile-modal">
+            <div class="modal-header">
+                <h2>Profile Details</h2>
+                <button class="modal-close-btn" id="modal-close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-avatar-section">
+                    <div class="modal-avatar-circle" id="modal-avatar-preview">AR</div>
+                    <div class="avatar-controls">
+                        <label>Choose Avatar Color</label>
+                        <div class="color-picker-row">
+                            <span class="color-dot active" data-color="#1ed760" style="background-color: #1ed760;"></span>
+                            <span class="color-dot" data-color="#4285F4" style="background-color: #4285F4;"></span>
+                            <span class="color-dot" data-color="#EA4335" style="background-color: #EA4335;"></span>
+                            <span class="color-dot" data-color="#9b51e0" style="background-color: #9b51e0;"></span>
+                            <span class="color-dot" data-color="#f2994a" style="background-color: #f2994a;"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-form-group">
+                    <label for="edit-display-name">Display Name</label>
+                    <input type="text" id="edit-display-name" placeholder="Your name">
+                </div>
+                <div class="modal-form-group">
+                    <label for="edit-email">Email Address</label>
+                    <input type="email" id="edit-email" placeholder="Your email" readonly>
+                    <small>Email address cannot be changed in demo mode.</small>
+                </div>
+                <div class="modal-form-group">
+                    <label>Subscription Plan</label>
+                    <div class="plan-badge" id="modal-plan-badge">Spotify Premium</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modal-cancel-btn">Cancel</button>
+                <button class="btn-primary" id="modal-save-btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queue Side Panel -->
+    <div class="queue-panel-overlay" id="queue-panel-overlay">
+        <div class="queue-header">
+            <h3><i class="fa-solid fa-bars-staggered"></i> Play Queue</h3>
+            <div class="queue-header-actions">
+                <button class="queue-clear-btn" id="queue-clear-btn">Clear Queue</button>
+                <button class="queue-close-btn" id="queue-close-btn" title="Close Queue"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div class="queue-body">
+            <div>
+                <div class="queue-section-title">Now Playing</div>
+                <div class="queue-now-playing-card" id="queue-now-playing">
+                    <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="queue-thumb" id="queue-curr-thumb" alt="Cover">
+                    <div class="queue-info">
+                        <div class="queue-title" id="queue-curr-title">Kesariya</div>
+                        <div class="queue-artist" id="queue-curr-artist">Arijit Singh, Pritam</div>
+                    </div>
+                    <i class="fa-solid fa-volume-high" style="color: #1ed760; font-size: 0.9rem;"></i>
+                </div>
+            </div>
+            <div>
+                <div class="queue-section-title">Next Up (Line by line)</div>
+                <div class="queue-track-list" id="queue-upcoming-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lyrics Full Overlay Panel -->
+    <div class="lyrics-overlay-panel" id="lyrics-overlay-panel">
+        <div class="lyrics-overlay-header">
+            <div class="lyrics-header-meta">
+                <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="lyrics-header-thumb" id="lyrics-header-thumb" alt="Cover">
+                <div>
+                    <div class="lyrics-header-title" id="lyrics-header-title">Kesariya</div>
+                    <div class="lyrics-header-artist" id="lyrics-header-artist">Arijit Singh, Pritam</div>
+                </div>
+            </div>
+            <button class="lyrics-close-btn" id="lyrics-close-btn" title="Close Lyrics"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="lyrics-content-container" id="lyrics-content-container">
+            <!-- Lyrics lines rendered dynamically -->
+        </div>
+    </div>
+
+    <!-- Spotify Connect Device Modal -->
+    <div class="device-modal-overlay" id="device-modal-overlay">
+        <div class="device-modal-content">
+            <div class="device-modal-header">
+                <h3><i class="fa-solid fa-computer"></i> Connect to a device</h3>
+                <button class="device-modal-close" id="device-modal-close" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="device-list">
+                <div class="device-item active" data-device="web">
+                    <div class="device-item-left">
+                        <i class="fa-solid fa-laptop device-icon"></i>
+                        <div class="device-item-info">
+                            <span class="device-name">Web Player (This Browser)</span>
+                            <span class="device-status"><i class="fa-solid fa-circle-check"></i> Listening On • High Quality</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="device-item" data-device="tv">
+                    <div class="device-item-left">
+                        <i class="fa-solid fa-tv device-icon"></i>
+                        <div class="device-item-info">
+                            <span class="device-name">Living Room TV</span>
+                            <span class="device-status">Google Cast • Available</span>
+                        </div>
+                    </div>
+                    <button class="badge dark-badge" style="padding: 4px 10px; font-size: 0.75rem;">Connect</button>
+                </div>
+                <div class="device-item" data-device="phone">
+                    <div class="device-item-left">
+                        <i class="fa-solid fa-mobile-screen device-icon"></i>
+                        <div class="device-item-info">
+                            <span class="device-name">iPhone 16 Pro</span>
+                            <span class="device-status">Spotify Connect • Available</span>
+                        </div>
+                    </div>
+                    <button class="badge dark-badge" style="padding: 4px 10px; font-size: 0.75rem;">Connect</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-Player / Picture-in-Picture -->
+    <div class="mini-player-overlay" id="mini-player-overlay">
+        <div class="mini-player-header">
+            <span><i class="fa-solid fa-clone"></i> Mini Player</span>
+            <button class="mini-close-btn" id="mini-close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="mini-player-content">
+            <img src="https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg" class="mini-thumb" id="mini-thumb" alt="Cover">
+            <div class="mini-meta">
+                <div class="mini-title" id="mini-title">Kesariya</div>
+                <div class="mini-artist" id="mini-artist">Arijit Singh, Pritam</div>
+                <div class="mini-controls">
+                    <button class="mini-btn" id="mini-prev-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+                    <button class="mini-btn" id="mini-play-btn" title="Play/Pause"><i class="fa-solid fa-play" id="mini-play-icon"></i></button>
+                    <button class="mini-btn" id="mini-next-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast-notification"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

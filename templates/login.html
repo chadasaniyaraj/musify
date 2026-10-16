@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in to Spotify</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <!-- Top Header -->
+    <header class="login-header">
+        <a href="index.html" class="brand-logo" title="Spotify Home">
+            <i class="fa-brands fa-spotify"></i>
+            <span>Spotify</span>
+        </a>
+        <a href="index.html" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i> Back to Player
+        </a>
+    </header>
+
+    <!-- Main Login Card -->
+    <main class="login-container">
+        <h1 class="login-title" id="page-title">Log in to Spotify</h1>
+
+        <!-- Alert Message Container -->
+        <div id="alert-box" class="alert-box"></div>
+
+        <!-- Social / Quick Logins -->
+        <div class="social-buttons">
+            <button class="social-btn demo-btn" id="demo-login-btn" type="button">
+                <i class="fa-solid fa-bolt"></i> Instant Demo Login (Alex Rivera)
+            </button>
+            <button class="social-btn" type="button" onclick="socialLogin('Google')">
+                <i class="fa-brands fa-google"></i> Continue with Google
+            </button>
+            <button class="social-btn" type="button" onclick="socialLogin('Apple')">
+                <i class="fa-brands fa-apple"></i> Continue with Apple
+            </button>
+        </div>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <!-- Dynamic Form -->
+        <form id="auth-form">
+            <!-- Full Name field (Only shown for Sign Up) -->
+            <div class="form-group" id="name-group" style="display: none;">
+                <label for="user-name">What should we call you? (Display Name)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="user-name" placeholder="Enter your profile name">
+                </div>
+            </div>
+
+            <!-- Email or Username -->
+            <div class="form-group">
+                <label for="user-email" id="email-label">Email address or username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="user-email" placeholder="name@domain.com" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="user-password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="user-password" placeholder="Password" required>
+                    <button type="button" class="toggle-password" id="toggle-pwd-btn">
+                        <i class="fa-regular fa-eye" id="eye-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember me / Forgot pwd -->
+            <div class="extra-options" id="extra-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember-me" checked> Remember me
+                </label>
+                <a href="#" class="forgot-password" onclick="alert('Password reset link sent to your email.'); return false;">Forgot your password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn" id="submit-btn">Log In</button>
+        </form>
+
+        <!-- Toggle Login / Signup -->
+        <div class="switch-auth">
+            <span id="switch-text">Don't have an account?</span>
+            <a id="switch-link">Sign up for Spotify</a>
+        </div>
+    </main>
+
+    <script>
+        // Check if URL has mode=signup
+        const urlParams = new URLSearchParams(window.location.search);
+        let isSignUp = urlParams.get('mode') === 'signup';
+
+        const pageTitle = document.getElementById('page-title');
+        const nameGroup = document.getElementById('name-group');
+        const emailLabel = document.getElementById('email-label');
+        const submitBtn = document.getElementById('submit-btn');
+        const switchText = document.getElementById('switch-text');
+        const switchLink = document.getElementById('switch-link');
+        const extraOptions = document.getElementById('extra-options');
+        const alertBox = document.getElementById('alert-box');
+        const authForm = document.getElementById('auth-form');
+        const demoLoginBtn = document.getElementById('demo-login-btn');
+        const togglePwdBtn = document.getElementById('toggle-pwd-btn');
+        const userPassword = document.getElementById('user-password');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        function updateFormUI() {
+            if (isSignUp) {
+                pageTitle.innerText = "Sign up for Spotify";
+                nameGroup.style.display = "flex";
+                emailLabel.innerText = "What's your email?";
+                submitBtn.innerText = "Sign Up";
+                switchText.innerText = "Already have an account?";
+                switchLink.innerText = "Log in here";
+                extraOptions.style.display = "none";
+            } else {
+                pageTitle.innerText = "Log in to Spotify";
+                nameGroup.style.display = "none";
+                emailLabel.innerText = "Email address or username";
+                submitBtn.innerText = "Log In";
+                switchText.innerText = "Don't have an account?";
+                switchLink.innerText = "Sign up for Spotify";
+                extraOptions.style.display = "flex";
+            }
+        }
+
+        switchLink.addEventListener('click', () => {
+            isSignUp = !isSignUp;
+            updateFormUI();
+        });
+
+        // Toggle password visibility
+        togglePwdBtn.addEventListener('click', () => {
+            if (userPassword.type === "password") {
+                userPassword.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                userPassword.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        });
+
+        // Demo login handler
+        demoLoginBtn.addEventListener('click', () => {
+            const demoUser = {
+                name: "Alex Rivera",
+                email: "alex.rivera@spotify.user",
+                avatarText: "AR",
+                avatarColor: "#1ed760",
+                isLoggedIn: true,
+                plan: "Spotify Premium"
+            };
+            saveUserAndRedirect(demoUser);
+        });
+
+        // Social login simulation
+        function socialLogin(provider) {
+            const socialUser = {
+                name: `${provider} User`,
+                email: `user@${provider.toLowerCase()}.com`,
+                avatarText: provider.charAt(0),
+                avatarColor: provider === 'Google' ? '#4285F4' : '#555555',
+                isLoggedIn: true,
+                plan: "Spotify Free"
+            };
+            saveUserAndRedirect(socialUser);
+        }
+
+        // Form submit handler
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailInput = document.getElementById('user-email').value.trim();
+            const passwordInput = document.getElementById('user-password').value;
+            const nameInput = document.getElementById('user-name').value.trim();
+
+            if (!emailInput || !passwordInput) {
+                showAlert("Please fill in all required fields.", "error");
+                return;
+            }
+
+            let displayName = isSignUp && nameInput ? nameInput : emailInput.split('@')[0];
+            displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
+            const userObj = {
+                name: displayName,
+                email: emailInput.includes('@') ? emailInput : `${emailInput}@spotify.user`,
+                avatarText: displayName.charAt(0).toUpperCase(),
+                avatarColor: "#1ed760",
+                isLoggedIn: true,
+                plan: "Spotify Premium"
+            };
+
+            showAlert(`Success! Welcome, ${displayName}. Redirecting...`, "success");
+            setTimeout(() => {
+                saveUserAndRedirect(userObj);
+            }, 800);
+        });
+
+        function saveUserAndRedirect(user) {
+            localStorage.setItem('spotify_user', JSON.stringify(user));
+            window.location.href = "index.html";
+        }
+
+        function showAlert(msg, type) {
+            alertBox.innerText = msg;
+            alertBox.className = `alert-box ${type}`;
+        }
+
+        updateFormUI();
+    </script>
+</body>
+
+</html>
