@@ -2033,23 +2033,38 @@ function initLibraryItems() {
 }
 
 // ------------------------------------------
-// Home Header Filter Pills (All, Music, Podcasts)
+// Home Header Filter Pills (All, Bollywood, Garba, Punjabi, Romantic, Devotional, English, Party, Latest)
 // ------------------------------------------
 function initHomeFilterPills() {
     document.querySelectorAll(".home-filter-pill").forEach(pill => {
-        pill.addEventListener("click", () => {
+        pill.addEventListener("click", async () => {
             document.querySelectorAll(".home-filter-pill").forEach(p => p.classList.remove("active"));
             pill.classList.add("active");
             const filter = pill.dataset.filter;
             const quickPicks = document.querySelector(".quick-picks-section");
             const allSections = document.querySelectorAll("#home-view .section-header-row, #home-view .cards-containr");
 
-            if (filter === "podcasts") {
-                searchSongs("The Joe Rogan Experience Ranveer Allahbadia Podcasts");
-            } else {
+            if (filter === "all") {
                 if (quickPicks) quickPicks.style.display = "block";
                 allSections.forEach(s => s.style.display = "");
                 showView("home");
+            } else if (filter === "podcasts") {
+                searchSongs("The Joe Rogan Experience Ranveer Allahbadia Podcasts");
+            } else {
+                // Fetch dynamic curated genre from backend
+                try {
+                    showToast(`Loading ${pill.innerText}...`);
+                    const res = await fetch(`/api/browse?category=${encodeURIComponent(filter)}&limit=16`);
+                    const data = await res.json();
+                    if (data.success && data.songs && data.songs.length > 0) {
+                        renderSearchResults(data.title || pill.innerText, data.songs);
+                        showView("search");
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("Category browse failed, searching fallback:", e);
+                }
+                searchSongs(`${pill.innerText} songs`);
             }
         });
     });
@@ -2057,6 +2072,14 @@ function initHomeFilterPills() {
     document.querySelectorAll(".section-show-all-link").forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
+            const genre = link.dataset.browseGenre;
+            if (genre) {
+                const pill = document.querySelector(`.home-filter-pill[data-filter="${genre}"]`);
+                if (pill) {
+                    pill.click();
+                    return;
+                }
+            }
             const heading = link.closest(".section-header-row")?.querySelector(".section-heading")?.innerText || "Top Trending Songs";
             if (searchInput) searchInput.value = heading;
             if (searchClearBtn) searchClearBtn.style.display = "flex";
@@ -2065,9 +2088,121 @@ function initHomeFilterPills() {
     });
 }
 
+// ------------------------------------------
+// Custom Playlist Management (MongoDB Synced)
+// ------------------------------------------
+function initCustomPlaylists() {
+    const createBtn = document.getElementById("lib-create-playlist-btn");
+    const modal = document.getElementById("playlist-modal-overlay");
+    const closeBtn = document.getElementById("playlist-modal-close");
+    const cancelBtn = document.getElementById("playlist-btn-cancel");
+    const saveBtn = document.getElementById("playlist-btn-save");
+    const nameInput = document.getElementById("playlist-name-input");
+    const descInput = document.getElementById("playlist-desc-input");
+
+    if (createBtn && modal) {
+        createBtn.addEventListener("click", () => {
+            modal.classList.add("open");
+            if (nameInput) {
+                nameInput.value = "";
+                nameInput.focus();
+            }
+            if (descInput) descInput.value = "";
+        });
+    }
+
+    const closeModal = () => modal && modal.classList.remove("open");
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+    if (modal) {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+
+    if (saveBtn) {
+        saveBtn.addEventListener("click", async () => {
+            const name = nameInput ? nameInput.value.trim() : "";
+            const desc = descInput ? descInput.value.trim() : "";
+            if (!name) {
+                showToast("Please enter a playlist name!");
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem("spotify_user") || "null");
+            try {
+                const res = await fetch("/api/user/playlists", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-user-email": user ? user.email : "alex.rivera@spotify.user"
+                    },
+                    body: JSON.stringify({ name, description: desc })
+                });
+                const data = await res.json();
+                if (data.success && data.playlist) {
+                    addPlaylistToSidebar(data.playlist);
+                    showToast(`Playlist "${name}" created!`);
+                    closeModal();
+                    return;
+                }
+            } catch (err) {
+                console.warn("Backend playlist save failed, using local:", err);
+            }
+
+            // Local fallback
+            addPlaylistToSidebar({
+                name,
+                description: desc,
+                coverUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60"
+            });
+            showToast(`Playlist "${name}" created!`);
+            closeModal();
+        });
+    }
+
+    loadUserPlaylists();
+}
+
+function addPlaylistToSidebar(pl) {
+    const list = document.getElementById("library-items-list");
+    if (!list) return;
+    const item = document.createElement("div");
+    item.className = "library-item";
+    item.setAttribute("data-query", pl.name);
+    item.innerHTML = `
+        <img src="${pl.coverUrl || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60'}" class="lib-item-thumb" alt="${escapeHtml(pl.name)}">
+        <div class="lib-item-info">
+            <div class="lib-item-title">${escapeHtml(pl.name)}</div>
+            <div class="lib-item-subtitle">Playlist • ${escapeHtml(pl.ownerName || 'You')}</div>
+        </div>
+    `;
+    item.addEventListener("click", () => {
+        searchSongs(pl.name);
+    });
+    list.appendChild(item);
+}
+
+async function loadUserPlaylists() {
+    const user = JSON.parse(localStorage.getItem("spotify_user") || "null");
+    if (!user || !user.email) return;
+    try {
+        const res = await fetch("/api/user/playlists", {
+            headers: { "x-user-email": user.email }
+        });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.playlists)) {
+            data.playlists.forEach(pl => addPlaylistToSidebar(pl));
+        }
+    } catch (e) {
+        console.warn("Error loading user playlists:", e);
+    }
+}
+
 initQuickPicks();
 initLibraryItems();
 initHomeFilterPills();
+initCustomPlaylists();
 
 
 // In bottom playbar: clicking the current song info opens its details page

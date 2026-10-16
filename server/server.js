@@ -3,6 +3,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const searchRoutes = require('./routes/searchRoutes');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const songRoutes = require('./routes/songRoutes');
 const dns = require('dns');
 
 // Force Node.js to use Google Public DNS (fixes querySrv ECONNREFUSED error on some networks)
@@ -19,13 +22,14 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Allows your frontend index.html to make requests to this backend
+app.use(cors()); // Allows frontend to make requests to backend
 app.use(express.json()); // Allows server to parse JSON payloads
 
 // Mount Routes
-// This mounts our search and stream routes. 
-// Your endpoints will be: http://localhost:PORT/api/search and http://localhost:PORT/api/stream/:id
 app.use('/api', searchRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/songs', songRoutes);
 
 // Health Check / Test Route
 app.get('/api/health', (req, res) => {

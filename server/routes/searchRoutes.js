@@ -191,12 +191,53 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// GET /browse (Popular song collections for the user to explore)
+// Category mapping for diverse languages and genres
+const GENRE_MAPPING = {
+  bollywood: { query: 'Top Bollywood Songs 2026', title: 'Bollywood Hits' },
+  garba: { query: 'Gujarati Garba Special Falguni Pathak Kinjal Dave', title: 'Garba Special & Gujarati Hits' },
+  gujarati: { query: 'Best Gujarati Songs Kinjal Dave Aditya Gadhvi', title: 'Gujarati Folk & Melodies' },
+  punjabi: { query: 'Top Punjabi Songs 2026 Diljit Dosanjh Karan Aujla', title: 'Punjabi Bangers' },
+  romantic: { query: 'Best Romantic Hindi Love Songs Arijit Singh', title: 'Romantic Melodies' },
+  devotional: { query: 'Best Bhakti Devotional Songs Hanuman Chalisa Shiv Tandav', title: 'Devotional & Spiritual' },
+  english: { query: 'Global Top English Pop Hits The Weeknd Ed Sheeran', title: 'Global Pop & English Hits' },
+  party: { query: 'Best Bollywood Party Dance Songs 2026', title: 'Party & Dance Mashups' },
+  latest: { query: 'Latest Hindi Songs 2026 New Releases', title: 'New Releases 2026' }
+};
+
+// GET /genres (List all available genres and languages)
+router.get('/genres', (req, res) => {
+  res.status(200).json({
+    success: true,
+    genres: [
+      { id: 'all', name: 'All Music', icon: 'fa-globe' },
+      { id: 'bollywood', name: 'Bollywood / Hindi', icon: 'fa-film' },
+      { id: 'garba', name: 'Garba Special', icon: 'fa-drum' },
+      { id: 'gujarati', name: 'Gujarati Folk', icon: 'fa-music' },
+      { id: 'punjabi', name: 'Punjabi Hits', icon: 'fa-fire' },
+      { id: 'romantic', name: 'Romantic Songs', icon: 'fa-heart' },
+      { id: 'devotional', name: 'Devotional / Bhakti', icon: 'fa-om' },
+      { id: 'english', name: 'English / Pop', icon: 'fa-headphones' },
+      { id: 'party', name: 'Party & Dance', icon: 'fa-champagne-glasses' },
+      { id: 'latest', name: 'New Releases', icon: 'fa-bolt' }
+    ]
+  });
+});
+
+// GET /browse (Popular song collections by category/genre)
 router.get('/browse', async (req, res) => {
   try {
-    const category = req.query.category || 'Top Bollywood Songs 2026';
-    const songs = await searchYouTube(category, 12);
-    res.status(200).json(songs);
+    const rawCategory = (req.query.category || req.query.genre || 'bollywood').toLowerCase().trim();
+    const mapped = GENRE_MAPPING[rawCategory];
+    const searchQuery = mapped ? mapped.query : req.query.category || 'Top Bollywood Songs 2026';
+    const limit = Math.min(Math.max(parseInt(req.query.limit) || 12, 4), 24);
+
+    const songs = await searchYouTube(searchQuery, limit);
+    res.status(200).json({
+      success: true,
+      category: rawCategory,
+      title: mapped ? mapped.title : searchQuery,
+      songs
+    });
   } catch (error) {
     console.error('Browse Error:', error);
     res.status(500).json({

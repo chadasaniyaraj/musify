@@ -912,6 +912,13 @@ button {
     align-items: center;
     gap: 8px;
     padding: 14px 0 18px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.home-filter-row::-webkit-scrollbar {
+    display: none;
 }
 
 .home-filter-pill {
@@ -923,6 +930,7 @@ button {
     border-radius: 500px;
     border: none;
     cursor: pointer;
+    flex-shrink: 0;
     transition: background-color 0.2s ease, transform 0.15s ease, color 0.15s ease;
 }
 
@@ -3514,4 +3522,151 @@ button {
 .mini-btn:hover {
     color: #1ed760;
     transform: scale(1.15);
+}
+
+/* ------------------------------------------
+   Custom Playlist Creation Modal
+   ------------------------------------------ */
+.playlist-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 10002;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInView 0.2s ease-out;
+}
+
+.playlist-modal-overlay.open {
+    display: flex;
+}
+
+.playlist-modal-content {
+    background: linear-gradient(180deg, #242424 0%, #181818 100%);
+    border-radius: 14px;
+    width: 440px;
+    max-width: 90vw;
+    padding: 1.8rem;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.playlist-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.playlist-modal-header h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.playlist-modal-header h3 i {
+    color: #1ed760;
+}
+
+.playlist-modal-close {
+    background: transparent;
+    border: none;
+    color: #a7a7a7;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.playlist-modal-close:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.playlist-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.playlist-form label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.playlist-form input,
+.playlist-form textarea {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.playlist-form input:focus,
+.playlist-form textarea:focus {
+    border-color: #1ed760;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.playlist-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.playlist-btn-cancel {
+    background: transparent;
+    border: none;
+    color: #a7a7a7;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 500px;
+    transition: color 0.2s ease;
+}
+
+.playlist-btn-cancel:hover {
+    color: #ffffff;
+}
+
+.playlist-btn-save {
+    background-color: #1ed760;
+    color: #000000;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 10px 22px;
+    border-radius: 500px;
+    border: none;
+    transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.playlist-btn-save:hover {
+    background-color: #1fdf64;
+    transform: scale(1.04);
 }

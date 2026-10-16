@@ -157,7 +157,22 @@
         });
 
         // Demo login handler
-        demoLoginBtn.addEventListener('click', () => {
+        // Demo login handler - connected to MongoDB
+        demoLoginBtn.addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/auth/demo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success && data.user) {
+                    saveUserAndRedirect(data.user);
+                    return;
+                }
+            } catch (err) {
+                console.warn('Backend demo auth offline, using local fallback:', err);
+            }
+
             const demoUser = {
                 name: "Alex Rivera",
                 email: "alex.rivera@spotify.user",
@@ -182,8 +197,8 @@
             saveUserAndRedirect(socialUser);
         }
 
-        // Form submit handler
-        authForm.addEventListener('submit', (e) => {
+        // Form submit handler - connected to MongoDB Atlas
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const emailInput = document.getElementById('user-email').value.trim();
             const passwordInput = document.getElementById('user-password').value;
@@ -194,27 +209,63 @@
                 return;
             }
 
-            let displayName = isSignUp && nameInput ? nameInput : emailInput.split('@')[0];
-            displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+            if (isSignUp && !nameInput) {
+                showAlert("Please enter your display name.", "error");
+                return;
+            }
 
-            const userObj = {
-                name: displayName,
-                email: emailInput.includes('@') ? emailInput : `${emailInput}@spotify.user`,
-                avatarText: displayName.charAt(0).toUpperCase(),
-                avatarColor: "#1ed760",
-                isLoggedIn: true,
-                plan: "Spotify Premium"
-            };
+            submitBtn.disabled = true;
+            submitBtn.innerText = isSignUp ? "Creating account..." : "Logging in...";
 
-            showAlert(`Success! Welcome, ${displayName}. Redirecting...`, "success");
-            setTimeout(() => {
-                saveUserAndRedirect(userObj);
-            }, 800);
+            const endpoint = isSignUp ? '/api/auth/register' : '/api/auth/login';
+            const payload = isSignUp
+                ? { name: nameInput, email: emailInput, password: passwordInput }
+                : { email: emailInput, password: passwordInput };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    showAlert(result.message || "Authentication failed. Please check credentials.", "error");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = isSignUp ? "Sign Up" : "Log In";
+                    return;
+                }
+
+                showAlert(result.message || "Success! Redirecting...", "success");
+                setTimeout(() => {
+                    saveUserAndRedirect(result.user);
+                }, 700);
+            } catch (netErr) {
+                console.warn("Backend auth offline, using client session fallback:", netErr);
+                let displayName = isSignUp && nameInput ? nameInput : emailInput.split('@')[0];
+                displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
+                const fallbackUser = {
+                    name: displayName,
+                    email: emailInput,
+                    avatarText: displayName.charAt(0).toUpperCase(),
+                    avatarColor: "#1ed760",
+                    isLoggedIn: true,
+                    plan: "Spotify Premium"
+                };
+
+                showAlert(`Success! Welcome, ${displayName}. Redirecting...`, "success");
+                setTimeout(() => {
+                    saveUserAndRedirect(fallbackUser);
+                }, 700);
+            }
         });
 
         function saveUserAndRedirect(user) {
+            user.isLoggedIn = true;
             localStorage.setItem('spotify_user', JSON.stringify(user));
-            window.location.href = "index.html";
+            window.location.href = "/";
         }
 
         function showAlert(msg, type) {
