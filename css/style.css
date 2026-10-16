@@ -533,10 +533,9 @@ button {
     transform: scale(1.15);
 }
 
-/* Autocomplete Suggestions Dropdown (Turned OFF as per user request) */
-.search-suggestions-dropdown,
-.search-suggestions-dropdown.open {
-    display: none !important;
+/* Autocomplete Suggestions Dropdown - shows only directly below search bar when query is entered */
+.search-suggestions-dropdown {
+    display: none;
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -548,6 +547,11 @@ button {
     z-index: 10000;
     flex-direction: column;
     overflow: hidden;
+}
+
+.search-suggestions-dropdown.open {
+    display: flex;
+    animation: suggestionsAnim 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes suggestionsAnim {

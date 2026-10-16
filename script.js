@@ -1588,8 +1588,8 @@ const searchSuggestionsDropdown = document.getElementById("search-suggestions-dr
 const searchContainer = document.getElementById("search-container");
 const searchLeadingIcon = document.querySelector(".search-leading-icon");
 
-// Feature Flag: Suggestions OFF as per user request ("any one search to suggetion is off")
-const ENABLE_SEARCH_SUGGESTIONS = false;
+// Feature Flag: Suggestions enabled ONLY directly below search input when text is entered
+const ENABLE_SEARCH_SUGGESTIONS = true;
 
 let suggestionDebounceTimer = null;
 let activeSuggestionIndex = -1;
@@ -1606,14 +1606,15 @@ function closeSuggestionsDropdown() {
     currentSuggestions = [];
 }
 
-// Render song suggestions (No-op when suggestions are off)
+// Render song suggestions (Shows only below search bar when query is entered)
 function renderSuggestions(suggestions, queryText) {
     if (!ENABLE_SEARCH_SUGGESTIONS) {
         closeSuggestionsDropdown();
         return;
     }
     if (!searchSuggestionsDropdown) return;
-    if (!Array.isArray(suggestions) || suggestions.length === 0) {
+    // Only show suggestions if user has actually typed a query
+    if (!queryText || !queryText.trim() || !Array.isArray(suggestions) || suggestions.length === 0) {
         closeSuggestionsDropdown();
         return;
     }
@@ -1621,11 +1622,10 @@ function renderSuggestions(suggestions, queryText) {
     currentSuggestions = suggestions;
     activeSuggestionIndex = -1;
 
-    const isPopularDefault = !queryText || queryText.trim() === "";
     let html = `
         <div class="suggestions-header">
-            <i class="fa-solid fa-music"></i>
-            <span>${isPopularDefault ? 'Popular Song Searches' : 'Song Suggestions'}</span>
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Suggestions for "${escapeHtml(queryText.trim())}"</span>
         </div>
     `;
 
@@ -1646,9 +1646,10 @@ function renderSuggestions(suggestions, queryText) {
     });
 
     searchSuggestionsDropdown.innerHTML = html;
+    searchSuggestionsDropdown.style.display = "flex";
     searchSuggestionsDropdown.classList.add("open");
 
-    // Click on suggestion
+    // Click on suggestion item
     searchSuggestionsDropdown.querySelectorAll(".suggestion-item").forEach(el => {
         el.addEventListener("click", () => {
             const chosen = el.dataset.query;
@@ -1665,59 +1666,96 @@ function selectSuggestion(query) {
     searchSongs(query);
 }
 
-// Fetch suggestions from backend (Only if suggestions are explicitly enabled)
+// Fetch suggestions from backend only when text is entered
 async function fetchSongSuggestions(q) {
-    if (!ENABLE_SEARCH_SUGGESTIONS) {
+    if (!ENABLE_SEARCH_SUGGESTIONS || !q || !q.trim()) {
         closeSuggestionsDropdown();
         return;
     }
     try {
-        const url = `${BACKEND_URL}/suggestions?q=${encodeURIComponent((q || '').trim())}`;
+        const cleanQ = q.trim();
+        const url = `${BACKEND_URL}/suggestions?q=${encodeURIComponent(cleanQ)}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch suggestions");
         const suggestions = await res.json();
-        renderSuggestions(suggestions, q);
+        // Verify input still matches to prevent stale renders
+        if (searchInput && searchInput.value.trim() === cleanQ) {
+            renderSuggestions(suggestions, cleanQ);
+        }
     } catch (err) {
         console.error("Suggestions fetch error:", err);
     }
 }
 
-// Input event handlers
+// Input event handlers: Suggestions show ONLY below search bar when query is entered
 if (searchInput) {
     searchInput.addEventListener("input", (e) => {
-        const val = e.target.value;
+        const rawVal = e.target.value;
+        const trimmed = rawVal.trim();
         if (searchClearBtn) {
-            searchClearBtn.style.display = val.length > 0 ? "flex" : "none";
+            searchClearBtn.style.display = rawVal.length > 0 ? "flex" : "none";
         }
 
-        if (ENABLE_SEARCH_SUGGESTIONS) {
+        if (ENABLE_SEARCH_SUGGESTIONS && trimmed.length > 0) {
             clearTimeout(suggestionDebounceTimer);
             suggestionDebounceTimer = setTimeout(() => {
-                fetchSongSuggestions(val);
+                fetchSongSuggestions(trimmed);
             }, 180);
         } else {
             closeSuggestionsDropdown();
         }
     });
 
+    // On focus: ONLY show suggestions if text is already entered (never on empty search)
     searchInput.addEventListener("focus", () => {
-        if (ENABLE_SEARCH_SUGGESTIONS) {
-            fetchSongSuggestions(searchInput.value || "");
+        const trimmed = searchInput.value.trim();
+        if (ENABLE_SEARCH_SUGGESTIONS && trimmed.length > 0) {
+            fetchSongSuggestions(trimmed);
         } else {
             closeSuggestionsDropdown();
         }
     });
 
     searchInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
+        const items = searchSuggestionsDropdown ? searchSuggestionsDropdown.querySelectorAll(".suggestion-item") : [];
+
+        if (e.key === "ArrowDown") {
             e.preventDefault();
-            const q = searchInput.value.trim();
-            if (q) {
-                closeSuggestionsDropdown();
-                searchSongs(q);
+            if (items.length > 0) {
+                activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+                updateActiveSuggestion(items);
+            }
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (items.length > 0) {
+                activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+                updateActiveSuggestion(items);
+            }
+        } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+                const chosen = items[activeSuggestionIndex].dataset.query;
+                selectSuggestion(chosen);
+            } else {
+                const q = searchInput.value.trim();
+                if (q) {
+                    closeSuggestionsDropdown();
+                    searchSongs(q);
+                }
             }
         } else if (e.key === "Escape") {
             closeSuggestionsDropdown();
+        }
+    });
+}
+
+function updateActiveSuggestion(items) {
+    items.forEach((item, idx) => {
+        if (idx === activeSuggestionIndex) {
+            item.classList.add("active");
+            if (searchInput) searchInput.value = item.dataset.query;
+        } else {
+            item.classList.remove("active");
         }
     });
 }
