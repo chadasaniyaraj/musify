@@ -87,12 +87,12 @@ function getLikedSongs() {
     }
     // Pre-seeded starter songs so user's liked library is populated right away
     return [
-        { id: "BddP6PYo2gs", title: "Kesariya", artist: "Arijit Singh, Pritam", coverUrl: "https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg", duration: "4:28" },
-        { id: "VAdGW7QDJiU", title: "Chaleya", artist: "Arijit Singh, Shilpa Rao", coverUrl: "https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg", duration: "3:20" },
-        { id: "mH_LFkWxpI0", title: "Lover", artist: "Diljit Dosanjh", coverUrl: "https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg", duration: "3:22" },
-        { id: "UEvOsQBu1jY", title: "Apna Bana Le", artist: "Arijit Singh", coverUrl: "https://i.ytimg.com/vi/UEvOsQBu1jY/hqdefault.jpg", duration: "4:21" },
-        { id: "JGwWNGJdvx8", title: "Shape of You", artist: "Ed Sheeran", coverUrl: "https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg", duration: "3:53" },
-        { id: "RIPaQQ7u_os", title: "Tu Hai Kahan", artist: "AUR", coverUrl: "https://i.ytimg.com/vi/RIPaQQ7u_os/hqdefault.jpg", duration: "4:15" }
+        { id: "BddP6PYo2gs", title: "Kesariya", artist: "Arijit Singh, Pritam", coverUrl: "https://i.ytimg.com/vi/BddP6PYo2gs/mqdefault.jpg", duration: "4:28" },
+        { id: "VAdGW7QDJiU", title: "Chaleya", artist: "Arijit Singh, Shilpa Rao", coverUrl: "https://i.ytimg.com/vi/VAdGW7QDJiU/mqdefault.jpg", duration: "3:20" },
+        { id: "mH_LFkWxpI0", title: "Lover", artist: "Diljit Dosanjh", coverUrl: "https://i.ytimg.com/vi/mH_LFkWxpI0/mqdefault.jpg", duration: "3:22" },
+        { id: "UEvOsQBu1jY", title: "Apna Bana Le", artist: "Arijit Singh", coverUrl: "https://i.ytimg.com/vi/UEvOsQBu1jY/mqdefault.jpg", duration: "4:21" },
+        { id: "JGwWNGJdvx8", title: "Shape of You", artist: "Ed Sheeran", coverUrl: "https://i.ytimg.com/vi/JGwWNGJdvx8/mqdefault.jpg", duration: "3:53" },
+        { id: "RIPaQQ7u_os", title: "Tu Hai Kahan", artist: "AUR", coverUrl: "https://i.ytimg.com/vi/RIPaQQ7u_os/mqdefault.jpg", duration: "4:15" }
     ];
 }
 
@@ -137,7 +137,7 @@ function toggleLikeSong(meta) {
             id: meta.id,
             title: meta.title || 'Unknown Track',
             artist: meta.artist || 'Featured Artist',
-            coverUrl: meta.coverUrl || `https://i.ytimg.com/vi/${meta.id}/hqdefault.jpg`,
+            coverUrl: meta.coverUrl || `https://i.ytimg.com/vi/${meta.id}/mqdefault.jpg`,
             duration: meta.duration || '3:30',
             addedAt: Date.now()
         });
@@ -454,7 +454,7 @@ function addToQueue(song) {
         id: song.id,
         title: song.title || 'Track',
         artist: song.artist || 'Artist',
-        coverUrl: song.coverUrl || `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`,
+        coverUrl: song.coverUrl || `https://i.ytimg.com/vi/${song.id}/mqdefault.jpg`,
         duration: song.duration || '3:30'
     });
     renderQueueList();
@@ -941,7 +941,7 @@ async function openSongDetails(songId, fallbackMeta = {}) {
             id: songId,
             title: fallbackMeta.title || 'Track Details',
             artist: fallbackMeta.artist || 'Featured Artist',
-            coverUrl: fallbackMeta.coverUrl || `https://i.ytimg.com/vi/${songId}/hqdefault.jpg`,
+            coverUrl: fallbackMeta.coverUrl || `https://i.ytimg.com/vi/${songId}/mqdefault.jpg`,
             duration: fallbackMeta.duration || '3:30',
             views: '2,500,000+ plays',
             likes: '75,000+',
@@ -1859,7 +1859,7 @@ function initQuickPicks() {
         id: c.dataset.id,
         title: c.dataset.title,
         artist: c.dataset.artist,
-        coverUrl: c.dataset.cover || `https://i.ytimg.com/vi/${c.dataset.id}/hqdefault.jpg`,
+        coverUrl: c.dataset.cover || `https://i.ytimg.com/vi/${c.dataset.id}/mqdefault.jpg`,
         duration: '3:30'
     }));
 
